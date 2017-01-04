@@ -1,0 +1,287 @@
+#############
+# Developer #
+#############
+
+alias vs="vagrant ssh"
+alias vm-list="vboxmanage list vms -l | awk '/^Name:  / || /^State: / {if (\$1 ==\"State:\") print \"  - \" \$2 \" \" \$3; else print \$2; }'"
+alias vm-list-hdds="vboxmanage list hdds | awk '/^Location:  / || /^Capacity: / {if (\$1 ==\"Capacity:\") {printf \"  -$1 \"; printf \$2 \" \";} print \$3}'"
+alias vm-start="vboxmanage startvm --type headless"
+
+# Kills all instances of ruby
+function kill-ruby { ps -A|grep ruby |awk '{print $1}' | xargs kill -s 9 ; }
+
+# tests if a page is being cached by showing you headers
+alias tcache="curl -svo /dev/null "
+
+# instant web server in the current directory
+#python -m SimpleHTTPServer
+# this is so clever...  ruby -r un requires the 'un' library... which
+# provides the command 'httpd' which is a wrapper for using weBrick
+alias rhttp='rvmsudo ruby -run -e httpd .'
+
+# Use this cmd to dl a web page and it's css/js file if you're not sure where a string comes from
+alias dl_resources_for_grepping='wget -p -k http://localhost:3000'
+
+alias r='rails'
+# To properly test, make sure you're running 'spork' in another terminal window
+alias test-rails='bundle exec rspec --drb spec/'
+alias bundle-install='bundle install --without development test'
+alias be='bundle exec'
+alias ber='bundle exec rake'
+
+# http://collectiveidea.com/blog/archives/2014/02/18/a-simple-pair-programming-setup-with-ssh-and-tmux/
+alias pairing-session-start='tmux new-session -s pair'
+alias pairing-session-join='tmux attach -t pair'
+
+# Run a single cucumber test
+# cucumber features/users/create_content.feature --require features
+
+#############
+# Git Stuff #
+#############
+
+# Basics:
+alias gis="git status"
+# Committing
+alias ga="git add -au" # adds all files and removed files to staging
+alias gam="git add -A; git commit --amend"
+alias gcm="git commit -m"
+alias gundo-last-commit-retain-progress='git stash && git reset --hard && git stash pop'
+alias gundo-commit-on-remote='git push origin :master'
+# Git Root:  Go to the root of the project directory
+alias gr='cd "$(git rev-parse --show-toplevel)"'
+alias gpl='git pull origin' 
+alias gps='git push origin'
+
+# Monitoring:
+alias gsnm='git branch --no-merged'  # view branches that still need to be merged
+# graphical commit history/log
+alias c="git checkout"
+alias gis="git status"
+alias gsnm='git branch --no-merged' # show branches you need to merge still
+alias glg="git log --branches --tags --graph --oneline --decorate --remotes"
+alias gdn='git diff --name-only'
+# $  git diff --color-words
+
+# Research:
+alias gdump="git log --oneline -p > /tmp/git/huge" # dump out contents of every file at each commit.  Allows searching 
+alias gago="git whatchanged --since='1 year ago'" # Looks at the diff since a year ago
+ghp() { git checkout $(git rev-list HEAD..master | tail -n 1); } #incriment HEAD, the opposit of git checkout HEAD^
+alias ghm="git checkout HEAD^"  # Git Head Minus 
+
+alias gdf="git diff --color"
+alias gdfh="git diff --color HEAD"
+# tags
+alias gat="git tag -a 'v1.0.0' -m 'this version works well'"
+alias gct="git checkout -t" # checkout specific tag
+# git push --tags
+# git push origin :refs/tags/tag_name_deleted
+# Merging
+alias gir="git rebase" # puts all your commits (in your current branch) ontop of the branch specified
+alias gmr="git merge" # merges the specified branch onto the current branch.. creating a mrege commit
+# This will delete any locally tracked remote branches if they're removed from origin
+alias gbc="git fetch origin --prune"
+
+# Ignoring Files
+
+# A .gitignore that isn't shared on the public repo
+alias vilocalignor='vi .git/info/exclude' 
+# This tells all repos on your machine to ignore the files listed in 
+# .gitignore_global
+# https://help.github.com/articles/ignoring-files/#create-a-global-gitignore
+alias git-ignore-awesome="git config --global core.excludesfile ~/.gitignore_global"
+
+# delete file from git repo without deleting
+# git rm --cached mylogfile.log
+
+# Ammend git commits (reuse the commit message for additional changes) by this
+# $  git commit --allow-empty -m "cool message"
+# $  git commit -a --amend
+
+# Colaborating
+
+# Bring lagging origin up to state of upstream
+# $  git fetch upstream
+# $  git reset --hard upstream/master
+
+# Pull in pull request so it can be merged with out an annoying blank commit
+# $  
+
+
+# hub aliases
+alias hubshow='cat ~/.config/hub'
+alias hubclear='rm ~/.config/hub'
+alias hubmk='hub create' # creates a remote repo
+
+#mongodb aliases
+alias mongoshell="mongo --shell --host $MONGODB_DEVELOPMENT_HOST --port $MONGODB_DEVELOPMENT_PORT -u $MONGODB_DEVELOPMENT_USERNAME -p $MONGODB_DEVELOPMENT_PASSWORD $MONGODB_DEVELOPMENT_DB"
+
+##############
+# Linux user #
+##############
+
+# Video
+# DL all videos of a youtube playlist BY PLAYLIST ID (eg PL0zVEGEvSaeFSwPn06GKArptSxiP1Gff8)
+dl-playlist-by-id() { youtube-dl -cit -f best https://www.youtube.com/watch?list=${1};}
+# Parse a web page's source for all it's embedded youtube vids and return a list of it's video ids
+# parse-page-for-embeds source.txt | xargs -n1 youtube-dl
+parse-page-for-embeds() { grep -oP 'https:\/\/www.youtube.com([^"]*)' ${1} | sed  's/https\:\/\/www\.youtube\.com\/embed\///'; }
+
+# Privacy
+alias anongo='sudo service openvpn start; sudo ufw enable;'
+alias anonstop='sudo service openvpn stop; sudo ufw disable;'
+
+# Package Maintenance
+alias latest-installs='grep " install " /var/log/dpkg.*'
+alias latest-upgrades='grep " upgrade " /var/log/dpkg.*'
+alias latest-removes='grep " remove " /var/log/dpkg.*'
+
+alias minecraft="java -jar ~/bin/minecraft/minecraft.jar &"
+
+# http://ubuntuforums.org/showthread.php?t=564301
+use-network-apt-cacher() { echo 'Acquire::http::Proxy "http://hostname:3142";' | sudo tee /etc/apt/apt.conf.d/01proxy; }
+use-direct-apt-querying() { echo 'Acquire::http::Proxy "http://";' | sudo tee /etc/apt/apt.conf.d/01proxy; }
+
+# re-format and partition SDCARD
+# gparted
+
+# compress file
+alias compress-file-with-zip='zip my.zip file'
+alias decompress-file-with-zip='unzip my.zip'
+
+# compress image
+alias compress-image-file='jpegoptim -m70'
+
+# Service management
+alias s='sudo service'
+
+
+# Get Gateway
+# netstat -rn | grep -e '^0\.0\.0\.0 \s*[0-9]*\.[0-9]*\.[0-9]\.[0-9].*[ew].*[0-9]*$' |awk '{print $2}'
+get-gateway() { netstat -rn | grep -e '^0\.0\.0\.0 \s*[0-9]*\.[0-9]*\.[0-9]\.[0-9].*[ew].*[0-9]*$' |awk '{print $2}'; }
+
+
+# Backups
+# Don't use this, see the script backup_self
+sync-files-to-backup() { 
+  rsync -avrh /media/kentos/f39c6a7b-0c94-4489-953b-dccb16f1037c/home/phill phill@192.168.0.56:/storage/backups/tesla/home/phill ; 
+}
+
+# File System
+fs-rename-files-to-linux-style() {
+  ls | while read -r FILE
+  do
+    mv -v "$FILE" `echo $FILE | tr ' ' '_' | tr -d '[{}(),\!]' | tr -d "\'" | tr '[A-Z]' '[a-z]' | sed 's/_-_/_/g'`
+  done ;
+}
+
+# Write raspbian to memory card 
+# dd bs=4M if=2015-02-16-raspbian-wheezy.img of=/dev/mmcblk0
+
+# DL a file from another machine via ssh
+# dl-ssh() { scp server:/file.txt . }
+
+#  ssh-copy-id -i identity_file remote_host 
+
+
+############
+# sysadmin #
+############
+
+# launch_vpnd
+alias vpnd="docker run --volumes-from $OVPN_DATA -p 1194:1194/udp --privileged -e DEBUG=1 kylemanna/openvpn"
+
+# restore a burp backup to a file
+alias burp_restore="burp -C obelisk -a r -d /storage/dumps_of_burp/obelisk"
+
+# To backup
+alias burp_backup="sudo burp -a b"
+
+# Network monitoring
+#
+# sudo darkstat -i wlan0 ;  lynx 127.0.0.1:667
+#
+# sudo netstat -tpn wlan0
+#
+# sudo nload wlan0
+#
+# # throttle bandwidth
+# sudo wondershaper wlan0 256 128
+# sudo wondershaper clear wlan0
+#
+# http://serverfault.com/questions/407968/how-find-out-what-or-who-is-using-my-bandwidth
+
+# Define a bash function 
+say-hello() { echo "hello ${1}" ;}
+
+# convert unix line endings to dos
+# awk 'sub("$", "\r")' unixfile.txt > winfile.txt
+# All .js files in directory
+# find . -name *.js |xargs dos2unix
+
+
+# Database
+# http://stackoverflow.com/questions/6861355/mysqldump-launched-by-cron-and-password-security
+# Pass in username and name of database to dump
+mysql-backup() { mysqldump -u ${1} -p ${2} > ${2}.sql; }
+
+# Pass in Username and database name
+# Run in folder with a *.sql file, database name must equal .sql file's name too...
+mysql-restore() { 
+  stty -echo;
+  read -p "Password: " passw; echo
+  stty echo;
+  mysql-temp-store-pw ${1} $passw
+  # if mysql --defaults-extra-file=mysql_helper_from_script$$ -e "create database ${2}" ; then 
+  if mysql -u${1} -p"$passw" -e "create database ${2}" ; then
+    echo "created new db"
+  else
+    read -p "Delete existing database? [y,n]", should_delete_db
+    if [ $should_delete_db == "y" ] ; then
+      mysql -u${1} -p"$passw" -e "drop database ${2};create database ${2}"
+      #mysql --defaults-extra-file=mysql_helper_from_script -e "drop database ${2}" &&
+      #mysql --defaults-extra-file=mysql_helper_from_script -e "create database ${2}" 
+    else
+      echo "No Action Performed"
+      return 1
+      #exit 1
+    fi
+  fi
+
+  mysql -u${1} -p"$passw" ${2} < ${2}.sql; 
+  #mysql --defaults-extra-file=mysql_helper_from_script < ${2} < ${2}.sql
+
+  #mysql -u${1} -p -e "create database ${2}" &&
+  #mysql -u${1} -p ${2} < ${2}.sql; 
+  mysql-temp-clear-pw
+}
+
+mysql-rm-database() { mysql -u${1} -p -e "drop database ${2}"; }
+
+mysql-temp-store-pw() { echo -e "[client]\nuser=${1}\npassword=${2}" > mysql_helper_from_script$$; }
+mysql-temp-clear-pw() { rm mysql_helper_from_script$$; }
+
+# Create database user and grant full access
+#
+# $  su; su postgres; psql
+#
+# > CREATE USER jack WITH PASSWORD 'password' CREATEDB SUPERUSER;
+
+# Linux specific aliases
+alias latest-installs='grep " install " /var/log/dpkg.*'
+alias latest-upgrades='grep " upgrade " /var/log/dpkg.*'
+alias latest-removes='grep " remove " /var/log/dpkg.*'
+
+# Email Related
+# http://forums.cpanel.net/f5/strange-bandwidth-usage-user-pop3-100161.html
+# Get's a picture of how much data this user is downloading in there mail per 3 days or so
+# grep user-name@domain.com /var/log/maillog | grep retr= | awk {'print $7" "$1" "$2" "$3" "$11'} | grep -v retr=0
+scan-mail() { grep user-name@domain.com /var/log/maillog | grep retr= | awk {'print $7" "$1" "$2" "$3" "$11'} | grep -v retr=0; }
+#alias scan-mail="grep user-name@domain-name.com /var/log/maillog | grep retr= | awk {'print $7\" \"$1\" \"$2\" \"$3\" \"$11'} | grep -v retr=0"
+# This one sums all the bytes 
+#grep domain-name.net /var/log/maillog* | grep retr= | grep -v retr=0 | awk {'print $11'} | cut -d, -f1 | cut -d= -f2 | awk '{t += $1} END { print "total: ", t, " bytes transferred over POP3"}'
+# pass in domain.com as parameter
+scan-mail-sum() { grep 1 /var/log/maillog* | grep retr= | grep -v retr=0 | awk {'print $11'} | cut -d, -f1 | cut -d= -f2 | awk '{t += $1} END { print "total: ", t, " bytes transferred over POP3"}'; }
+
+
+

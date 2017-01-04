@@ -1,0 +1,18 @@
+"*":
+  autosave:
+    enabled: true
+  core:
+    telemetryConsent: "no"
+    themes: [
+      "atom-light-ui"
+      "atom-light-syntax"
+    ]
+  editor:
+    fontSize: 11
+    invisibles: {}
+    showInvisibles: true
+  "exception-reporting":
+    userId: "51aebdf4-6d50-0ca2-d7af-8aab92d01b86"
+  tabs: {}
+  welcome:
+    showOnStartup: false

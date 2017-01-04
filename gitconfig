@@ -1,0 +1,21 @@
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
+[user]
+	name = jedl
+	email = jed.luhmann@harkenhealth.com
+
+[url "https://"]
+        insteadOf = git://
+#[diff]
+#	external = /Users/jluhmann/bin/git-diff.sh
+[merge]
+	tool = opendiff
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  interactive = auto
+  ui = true
+  pager = true
