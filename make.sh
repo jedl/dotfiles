@@ -60,13 +60,13 @@ done
 #
 #   The primary configuration file for Atom is `~/.atom/config.cson`
 # We don't want to version control anything else, and we don't want anything in
-# that folder removed when we run `~/.make.sh`  other than a few specific 
-# config files.  So we can drop the config files in `~/dotfiles/complex/atom/` 
+# that folder removed when we run `~/.make.sh`  other than a few specific
+# config files.  So we can drop the config files in `~/dotfiles/complex/atom/`
 # to have them directly installed into the proper place...
 
 # change to the dotfiles directory
 echo "Changing to the $dir/complex directory"
-cd ${dir}/complex
+pushd ${dir}/complex
 echo "...done"
 
 folders="$(ls ${PWD})"
@@ -78,16 +78,19 @@ for folder in $folders; do
   #cp -R ~/.${folder} ${olddir}/complex/${folder}
 
   # cd into the folder
-  cd $folder
+  pushd $folder
   complex_files="$(ls ${PWD})"
   for file in ${complex_files}; do
     echo "Making backup of ${file} in ${olddir}/complex/${folder}/${file}"
+    mkdir ${olddir}/complex/${folder}
     [ -e ${HOME}/.${folder}/${file} ] && mv ${HOME}/.${folder}/${file} ${olddir}/complex/${folder}/${file}
 
     echo "Creating symlink to ~/.${folder}/${file}"
     [ -e ${HOME}/.${folder}/ ] && ln -s ${PWD}/${file} ${HOME}/.${folder}/${file}
   done
+  popd
 
 done
+popd
 
 exit

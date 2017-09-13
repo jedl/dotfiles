@@ -43,6 +43,7 @@ alias pairing-session-join='tmux attach -t pair'
 # Basics:
 alias gis="git status"
 # Committing
+alias d="git diff"
 alias ga="git add -au" # adds all files and removed files to staging
 alias gam="git add -A; git commit --amend"
 alias gcm="git commit -m"

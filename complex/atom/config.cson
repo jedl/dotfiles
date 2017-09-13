@@ -8,7 +8,6 @@
       "atom-light-syntax"
     ]
   editor:
-    fontSize: 11
     invisibles: {}
     showInvisibles: true
   "exception-reporting":

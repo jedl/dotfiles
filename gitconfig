@@ -4,7 +4,7 @@
 	required = true
 [user]
 	name = jedl
-	email = jed.luhmann@harkenhealth.com
+	email = jed@enormousthings.com
 
 [url "https://"]
         insteadOf = git://
