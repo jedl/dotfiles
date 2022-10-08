@@ -5,7 +5,7 @@
 	process = git-lfs filter-process
 [user]
 	name = jedl
-	email = jed@enormousthings.com
+	email = jed@jedred.com
 
 [url "https://"]
         insteadOf = git://
